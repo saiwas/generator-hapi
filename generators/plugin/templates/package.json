@@ -1,0 +1,33 @@
+{
+  "name": "<%= appName %>",
+  "version": "0.0.1",
+  "description": "This a nodejs plugin / library",
+  "main": "./src/implement.js",
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/saiwas/<%= appName %>.git"
+  },
+  "bugs": {
+    "url": "https://github.com/saiwas/<%= appName %>/issues"
+  },
+  "keywords": [
+    "plugin",
+    "<%= appName %>",
+    "package"
+  ],
+  "author": "Johnny",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "4.x.x",
+    "chai-as-promised": "7.x.x",
+    "eslint": "4.x.x",
+    "mocha": "4.x.x"
+  },
+  "dependencies": {
+    "bluebird": "3.x.x",
+    "boom": "^7.2.0"
+  }
+}

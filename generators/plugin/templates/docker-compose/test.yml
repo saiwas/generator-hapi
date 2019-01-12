@@ -1,0 +1,14 @@
+version: '3.4'
+services:
+  <%= appName %>:
+    container_name: <%= appName %>
+    build:
+      context: ../
+      dockerfile: ./docker-compose/Dockerfile
+    volumes:
+      - ../:/<%= appName %>
+    ports:
+      - "3000:80"
+    command: |
+      sh -c 'chmod u+x ./docker-compose/bin/wait-for && \
+        npm test && exit 0;'
