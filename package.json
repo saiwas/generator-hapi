@@ -1,7 +1,7 @@
 {
-  "name": "hapi-generator",
+  "name": "generator-hapi",
   "version": "1.0.0",
-  "description": "To generate ab-test projects' template",
+  "description": "To generate a Hapi Project template",
   "main": "./app/index.js",
   "files": [
     "generators"
@@ -11,7 +11,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/saiwas/hapi-generator.git"
+    "url": "https://github.com/saiwas/generator-hapi.git"
   },
   "author": "Johnny Zhang",
   "license": "ISC",

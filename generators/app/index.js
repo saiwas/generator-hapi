@@ -15,7 +15,7 @@ module.exports = class extends Generator {
 
                 for (let i = 0; i < files.length; i++) {
                   if(!excludeFolders.includes(files[i])) {
-                    this.log(chalk.bold.green('yo') + ' hapi-generator:' + files[i]);
+                    this.log(chalk.bold.green('yo') + ' hapi:' + files[i]);
                   }
                 }
             })
