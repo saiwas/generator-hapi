@@ -1,0 +1,20 @@
+FROM node:10.12.0-alpine
+
+MAINTAINER Johnny
+
+USER root
+
+ARG ENV
+
+ENV ROOT_APP_DIR=/<%= appName %>
+ENV PORT=80
+RUN export NODE_ENV=${ENV}
+
+WORKDIR $ROOT_APP_DIR
+
+ADD ./ $ROOT_APP_DIR/
+
+RUN npm install
+
+EXPOSE $PORT
+CMD npm start

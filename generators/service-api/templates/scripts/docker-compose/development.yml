@@ -1,0 +1,18 @@
+version: '3.4'
+services:
+  <%= appName %>:
+    container_name: <%= appName %>
+    build:
+      context: ../../
+      dockerfile: ./scripts/Dockerfile.dev
+    volumes:
+      - ../../:/<%= appName %>
+    ports:
+      - "3000:80"
+    depends_on:
+      - rabbitmq
+      - db
+      - elasticsearch
+    command: |
+      sh -c 'chmod u+x ./scripts/bin/wait-for && \
+        npm start'

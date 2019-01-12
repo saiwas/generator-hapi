@@ -1,0 +1,46 @@
+{
+  "name": "<%= appName %>",
+  "version": "0.0.1",
+  "private": false,
+  "description": "Plugin",
+  "homepage": "https://github.com/saiwas/<%= appName %>#readme",
+  "main": "src/plugin.js",
+  "bugs": {
+    "url": "https://github.com/saiwas/<%= appName %>"
+  },
+  "scripts": {
+    "start": "NODE_ENV=production node ./src/service",
+    "dev": "NODE_ENV=develop node ./src/service"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/saiwas/<%= appName %>.git"
+  },
+  "keywords": [
+    "api",
+    "service-api-<%= appName %>"
+  ],
+  "author": "Johnny",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "4.x.x",
+    "eslint": "4.x.x",
+    "mocha": "4.x.x"
+  },
+  "peerDependencies": {
+    "bluebird": "3.x.x",
+    "hapi": "17.x.x"
+  },
+  "dependencies": {
+    "bluebird": "3.x.x",
+    "boom": "5.x.x",
+    "dotenv": "6.x.x",
+    "glue": "5.x.x",
+    "hapi-swagger": "9.x.x",
+    "inert": "5.x.x",
+    "joi": "13.x.x",
+    "newrelic": "4.x.x",
+    "redis": "2.x.x",
+    "vision": "5.x.x"
+  }
+}
