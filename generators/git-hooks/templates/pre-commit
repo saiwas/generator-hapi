@@ -1,0 +1,95 @@
+#!/bin/sh
+export PATH=/usr/local/bin:$PATH
+
+jsFilesChanged=$(git diff --cached --name-only --diff-filter=ACM | grep ".js$")
+packageJsonChanged=$(git diff --cached --name-only --diff-filter=ACM | grep "package.json")
+pass=true
+passTest=true
+
+if [ -n "$packageJsonChanged" ] || [ -n "$jsFilesChanged" ]; then
+    echo "\nValidating version formatting in package.json:\n--------------------------------------------"
+    if grep -q "\^" $PWD/package.json; then
+        echo "\nCOMMIT FAILED: Carets should be removed from package versions in package.json. Pin the exact version or use a format like \"1.x.x\".\n"
+        exit 1
+    else
+        echo "\nPACKAGE.JSON VALIDATION SUCCEEDED.\n"
+    fi
+fi
+
+if [ -n "$jsFilesChanged" ]; then
+    echo "\nValidating JavaScript:\n----------------------"
+
+    if [ -f ".eslintrc" ] || [ -f ".eslintrc.json" ]; then
+        for file in ${jsFilesChanged}; do
+
+            esLintResult=$(node_modules/.bin/eslint $PWD/${file} | grep "error\s\s*")
+
+            if [ "$esLintResult" = "" ]; then
+                echo "ESLint Passed: ${file}"
+            else
+                echo "$esLintResult"
+                echo "ESLint Failed: ${file}"
+                pass=false
+                exit 1
+            fi
+
+        done
+    else
+        for file in ${jsFilesChanged}; do
+
+            resultHint=$(/usr/local/bin/jshint $PWD/${file} | grep "error")
+            resultCS=$(/usr/local/bin/jscs $PWD/${file} | grep "style errors found")
+            errorsHint=$(/usr/local/bin/jshint $PWD/${file})
+            errorsCS=$(/usr/local/bin/jscs $PWD/${file})
+
+            if [ "$resultHint" = "" ]; then
+                echo "JSHint Passed: ${file}"
+            else
+                echo "$errorsHint"
+                echo "JSHint Failed: ${file}"
+                pass=false
+            fi
+
+            if [ "$resultCS" = "" ]; then
+                echo "JSCS Passed: ${file}"
+            else
+                echo "$errorsCS"
+                echo "JSCS Failed: ${file}"
+                pass=false
+            fi
+
+            if [ "$file" = ".jscsrc" ]; then
+                echo "You are not allowed to modify .jscsrc"
+                pass=false
+            fi
+
+        done
+    fi
+
+    echo "\nJavaScript validation complete\n"
+
+    if ! $pass; then
+        echo "COMMIT FAILED: Your commit contains files that should pass Linting, but do not. Please fix the Lint errors and try again.\n"
+    exit 1
+    else
+        echo "JAVASCRIPT VALIDATION SUCCEEDED.\n"
+    fi
+
+    if [ -d "test" ]; then
+        echo "\nValidating tests:\n----------------------"
+
+        testResults=$(/usr/local/bin/mocha $PWD/test)
+        echo "$testResults"
+
+        if [[ "$testResults" =~ "failing" ]]; then
+            passTest=false
+        fi
+
+        if ! $passTest; then
+            echo "\nCOMMIT FAILED: Your tests have failed. Please make sure every test passes and try again.\n"
+            exit 1
+        else
+            echo "\nTESTS VALIDATION SUCCEEDED.\n\nProceeding to Pivotal validation ...\n"
+        fi
+    fi
+fi

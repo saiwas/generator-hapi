@@ -1,0 +1,21 @@
+#!/bin/sh
+# If commit message doesn't contain [#(PivotalStoryID)], commit must fail
+
+resultGrep=$(cat $1 | egrep "^(Merge branch)|^(Updated npm -shrinkwrap file)|^([0-9]+.[0-9]+.[0-9]+)|\[(Finishes\s|Fixes\s|Delivers\s)*#[0-9]+\]")
+
+if [ "$resultGrep" = "" ]; then
+    echo "Insert Pivotal story id and number in commit message"
+    echo "eg: [#12345]"
+    echo "eg: [Finishes #12345]"
+    echo "eg: [Fixes #12345]"
+    echo "eg: [Delivers #12345]"
+    echo "eg: Your message \\n [Delivers #12345]"
+    echo "\n"
+    echo "COMMIT FAILED"
+    echo "\n"
+    exit 1
+else
+    echo "\n"
+    echo "COMMIT SUCCEEDED"
+    echo "\n"
+fi
