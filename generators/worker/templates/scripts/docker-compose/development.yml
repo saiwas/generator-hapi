@@ -1,0 +1,58 @@
+version: '3.4'
+services:
+  rabbitmq:
+    container_name: booster-mq
+    image: "rabbitmq:3-management"
+    hostname: "rabbit"
+    environment:
+      RABBITMQ_DEFAULT_VHOST: "/"
+    ports:
+      - "15671:15671"
+      - "5672:5672"
+      - "25672:25672"
+    labels:
+      NAME: "rabbitmq"
+    volumes:
+      - "~/booster-project/docker-compose-data/rabbitmq:/var/lib/rabbitmq"
+  db:
+    container_name: booster-db
+    image: postgres:11.0-alpine
+    ports:
+      - "5432:5432"
+    volumes:
+      - ~/booster-project/docker-compose-data/postgresql:/var/lib/postgresql/
+  elasticsearch:
+    container_name: booster-es
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.4.2
+    container_name: elasticsearch
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ~/booster-project/docker-compose-data/elasticsearch:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+  <%= appName %>:
+    container_name: <%= appName %>
+    build:
+      context: ../../
+      dockerfile: ./Dockerfile
+    volumes:
+      - ../../:/<%= appName %>
+    depends_on:
+      - rabbitmq
+      - db
+      - elasticsearch
+    command: |
+      sh -c 'chmod u+x ./scripts/bin/wait-for \
+        && chmod u+x ./scripts/bin/seed \
+        && ./scripts/bin/wait-for db:5432 -- \
+        ./scripts/bin/wait-for rabbitmq:5672 -- \
+        ./scripts/bin/wait-for elasticsearch:9200 -- \
+        ./scripts/bin/seed --
+        npm start'
