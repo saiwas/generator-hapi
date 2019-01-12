@@ -1,0 +1,25 @@
+{
+  "name": "hapi-generator",
+  "version": "1.0.0",
+  "description": "To generate ab-test projects' template",
+  "main": "./app/index.js",
+  "files": [
+    "generators"
+  ],
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/saiwas/hapi-generator.git"
+  },
+  "author": "Johnny Zhang",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.5.2",
+    "chalk": "^2.4.1",
+    "file-system": "^2.2.2",
+    "npm-shrinkwrap": "^6.1.0",
+    "yeoman-generator": "^3.1.1"
+  }
+}
